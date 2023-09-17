@@ -8,25 +8,17 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 public class UserDetailsService {
 
-	 public InMemoryUserDetailsManager userDetailsService(){
-    UserDetails ramesh = User.builder()
-            .username("ramesh")
-            .password(passwordEncoder().encode("password"))
-            .roles("USER")
-            .build();
+	public InMemoryUserDetailsManager userDetailsService() {
+		UserDetails Lucas = User.builder().username("Lucas").password(passwordEncoder().encode("password"))
+				.roles("USER").build();
 
-    UserDetails admin = User.builder()
-            .username("admin")
-            .password(passwordEncoder().encode("admin"))
-            .roles("ADMIN")
-            .build();
+		UserDetails admin = User.builder().username("admin").password(passwordEncoder().encode("admin")).roles("ADMIN")
+				.build();
 
-    return new InMemoryUserDetailsManager(ramesh, admin);
-	 }
-    
-    
-    
-    public static PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+		return new InMemoryUserDetailsManager(Lucas, admin);
+	}
+
+	public static PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 }

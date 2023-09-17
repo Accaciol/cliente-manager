@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.PostUpdate;
 import javax.persistence.TypedQuery;
 import javax.websocket.server.PathParam;
 
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,21 +30,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.accacio.clientemanager.model.Cliente;
 import com.accacio.clientemanager.repository.ClienteRepository;
+import com.accacio.clientemanager.service.ClienteService;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
 
+	
 	@Autowired
-	ClienteRepository clienteRepository;
+	ClienteService clienteService;
 
 	@GetMapping
 	public ResponseEntity<List<Cliente>> getAllClients(Authentication authentication) {
 		
 		List<Cliente> cliente = new ArrayList<Cliente>();
 		try {
-			cliente = clienteRepository.findAllNative();
+			cliente = clienteService.findAllNative();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,7 +66,7 @@ public class ClienteController {
 		
 		Cliente cliente = new Cliente();
 		try {
-			cliente = clienteRepository.findOnlyOneNative(id);
+			cliente = clienteService.findOnlyOneNative(id);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,13 +81,20 @@ public class ClienteController {
 	}
 	
 	@PostMapping
-	public boolean criarUsuario() {
-		return false;
+	public void criarUsuario(@RequestBody Cliente cliente) {
+		clienteService.criarCliente(cliente);
 	}
 
 	@DeleteMapping("/{id}")
-	public boolean apagarUsuario() {
-		return false;
+	public void apagarUsuario(@PathVariable Integer id) {
+		clienteService.removeCliente(id);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<Cliente> atualizaParcialmenteCliente(@RequestBody Cliente cliente){
+		clienteService.alterarCliente(cliente);
+		
+		return null;
 	}
 	
 	 @GetMapping("/validarUsuario")
