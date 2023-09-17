@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.accacio.clientemanager.controller.GeradorMassa;
 import com.accacio.clientemanager.model.Cliente;
 import com.accacio.clientemanager.repository.ClienteRepository;
 
