@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -30,13 +31,13 @@ import com.accacio.clientemanager.repository.ClienteRepository;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/clientes")
 public class ClienteController {
 
 	@Autowired
 	ClienteRepository clienteRepository;
 
-	@GetMapping("/clientes")
+	@GetMapping
 	public ResponseEntity<List<Cliente>> getAllClients(Authentication authentication) {
 		
 		List<Cliente> cliente = new ArrayList<Cliente>();
@@ -47,15 +48,42 @@ public class ClienteController {
 			e.printStackTrace();
 		}
 		
+		try {
+			return new ResponseEntity<>(cliente, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Cliente> getOnlyOneClient(Authentication authentication,
+			@PathVariable Integer id) {
 		
-		System.out.println(cliente.get(1));
-		System.out.println(cliente.get(2));
+		Cliente cliente = new Cliente();
+		try {
+			cliente = clienteRepository.findOnlyOneNative(id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(cliente);
 		
 		try {
 			return new ResponseEntity<>(cliente, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	@PostMapping
+	public boolean criarUsuario() {
+		return false;
+	}
+
+	@DeleteMapping("/{id}")
+	public boolean apagarUsuario() {
+		return false;
 	}
 	
 	 @GetMapping("/validarUsuario")

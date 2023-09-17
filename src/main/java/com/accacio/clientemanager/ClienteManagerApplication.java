@@ -25,8 +25,6 @@ public class ClienteManagerApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-//		Cliente cli = new Cliente(1, "Joao", "14539206761", "email@teste.com", "123456");
-//		clienteRepository.save(cli);
 		
 		List<Cliente> clientesGerados = geradorClientes();
 		clienteRepository.saveAll(clientesGerados);
