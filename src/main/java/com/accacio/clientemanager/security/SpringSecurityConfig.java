@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SpringSecurityConfig {
@@ -24,18 +26,21 @@ public class SpringSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf().disable()
-                .authorizeHttpRequests((authorize) -> {
-                    authorize.anyRequest().authenticated();
-                }).httpBasic(Customizer.withDefaults());
-        return http.build();
+		http.authorizeHttpRequests().antMatchers("/h2-console/**").permitAll()
+        .and().csrf().disable()
+        .headers().frameOptions().disable().and() //Liberando o Console H2
+        .authorizeHttpRequests((authorize) -> {
+    		authorize.anyRequest().authenticated();
+    	}).httpBasic(Customizer.withDefaults());
+	    
+		return http.build();
     }
 
     @Bean
     public UserDetailsService userDetailsService(){
 
-        UserDetails ramesh = User.builder()
-                .username("ramesh")
+        UserDetails lucas = User.builder()
+                .username("lucas")
                 .password(passwordEncoder().encode("password"))
                 .roles("USER")
                 .build();
@@ -46,6 +51,6 @@ public class SpringSecurityConfig {
                 .roles("ADMIN")
                 .build();
 
-        return new InMemoryUserDetailsManager(ramesh, admin);
+        return new InMemoryUserDetailsManager(lucas, admin);
     }
 }

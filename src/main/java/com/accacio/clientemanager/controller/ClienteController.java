@@ -37,10 +37,16 @@ public class ClienteController {
 	ClienteRepository clienteRepository;
 
 	@GetMapping("/clientes")
-	public ResponseEntity<List<Cliente>> getAllClients(EntityManager entityManager) {
-		TypedQuery<Cliente> query = entityManager.createQuery("SELECT * FROM CLIENTE ", Cliente.class);
+	public ResponseEntity<List<Cliente>> getAllClients(Authentication authentication) {
 		
-		List<Cliente> cliente = query.getResultList();
+		List<Cliente> cliente = new ArrayList<Cliente>();
+		try {
+			cliente = clienteRepository.findAllNative();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		System.out.println(cliente.get(1));
 		System.out.println(cliente.get(2));
