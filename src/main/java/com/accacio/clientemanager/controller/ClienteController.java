@@ -5,9 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,20 +37,34 @@ public class ClienteController {
 	ClienteRepository clienteRepository;
 
 	@GetMapping("/clientes")
-	public ResponseEntity<List<Cliente>> getAllClientes(@RequestParam(required = false) String title) {
+	public ResponseEntity<List<Cliente>> getAllClients(EntityManager entityManager) {
+		TypedQuery<Cliente> query = entityManager.createQuery("SELECT * FROM CLIENTE ", Cliente.class);
+		
+		List<Cliente> cliente = query.getResultList();
+		
+		System.out.println(cliente.get(1));
+		System.out.println(cliente.get(2));
+		
 		try {
-			List<Cliente> clientes = new ArrayList<Cliente>();
+			return new ResponseEntity<>(cliente, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	 @GetMapping("/validarUsuario")
+	    public String validarUsuario(Authentication authentication) {
 
-			if (title == null)
-				clienteRepository.findAll().forEach(clientes::add);
-			else
-				//clienteRepository.findByTitleContaining(title).forEach(clientes::add);
+	        String userName = authentication.getName();
 
-			if (clientes.isEmpty()) {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
-
-			return new ResponseEntity<>(clientes, HttpStatus.OK);
+	        return "Spring Security In-memory Authentication Example - Welcome " + userName;
+	    }
+	
+	
+	@GetMapping("/isAlive")
+	public ResponseEntity<List<Cliente>> isAlive(@RequestParam(required = false) String title) {
+		try {
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
