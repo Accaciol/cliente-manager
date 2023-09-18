@@ -2,6 +2,7 @@ package com.accacio.clientemanager.controller;
 
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.accacio.clientemanager.model.Cliente;
 import com.accacio.clientemanager.service.ClienteService;
+import com.accacio.clientemanager.utils.Validador;
 
 @CrossOrigin(origins = "http://localhost:8080")
 @RestController
@@ -30,6 +32,8 @@ public class ClienteController {
 	
 	@Autowired
 	ClienteService clienteService;
+	
+	Validador validador;
 
 	@GetMapping
 	public ResponseEntity<List<Cliente>> getAllClients(Authentication authentication) {
@@ -38,7 +42,6 @@ public class ClienteController {
 		try {
 			cliente = clienteService.findAllNative();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -58,10 +61,8 @@ public class ClienteController {
 		try {
 			cliente = clienteService.findOnlyOneNative(id);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(cliente);
 		
 		try {
 			return new ResponseEntity<>(cliente, HttpStatus.OK);
@@ -71,8 +72,11 @@ public class ClienteController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) {
-		clienteService.criarCliente(cliente);
+	public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) throws Exception {
+		boolean clientevalido = validador.validadorCliente(cliente);
+		if(clientevalido) {
+			clienteService.criarCliente(cliente);
+		}
 		try {
 			return new ResponseEntity<>(cliente, HttpStatus.OK);
 		} catch (Exception e) {
