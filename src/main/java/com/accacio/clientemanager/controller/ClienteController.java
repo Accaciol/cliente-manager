@@ -71,20 +71,34 @@ public class ClienteController {
 	}
 	
 	@PostMapping
-	public void criarUsuario(@RequestBody Cliente cliente) {
+	public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) {
 		clienteService.criarCliente(cliente);
+		try {
+			return new ResponseEntity<>(cliente, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@DeleteMapping("/{id}")
-	public void apagarUsuario(@PathVariable Integer id) {
+	public ResponseEntity<Object> apagarUsuario(@PathVariable Integer id) {
 		clienteService.removeCliente(id);
+		
+		try {
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Cliente> atualizaParcialmenteCliente(@RequestBody Cliente cliente){
+	public ResponseEntity<Cliente> alterarCliente(@RequestBody Cliente cliente){
 		clienteService.alterarCliente(cliente);
-		
-		return null;
+		try {
+			return new ResponseEntity<>(cliente, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	 @GetMapping("/validarUsuario")
