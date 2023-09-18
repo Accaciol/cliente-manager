@@ -4,54 +4,49 @@ import com.accacio.clientemanager.model.Cliente;
 
 public class Validador {
 
-	public boolean validadorCliente(Cliente cliente) throws Exception {
+	public static boolean validadorCliente(Cliente cliente) {
+	    
+	    if(validaCPF(cliente) || validaEmail(cliente) || validaSenha(cliente) ||
+	    		validaNome(cliente)) {
+	    	return  false;
+	    }
+	    return true;
+	}
 
-		if(validaCPF(cliente)) {
-			throw new Exception("CPF não foi preenchido.");
-		}if(validaEmail(cliente)) {
-			throw new Exception("Email não foi preenchido.");
-		}if(validaSenha(cliente)) {
-			throw new Exception("Senha não foi preenchido.");
-		}if(validaNome(cliente)) {
-			throw new Exception("Nome não foi preenchido.");
+	
+	public static boolean validaCPF(Cliente cliente){
+		String cpf = cliente.getCpf();
+
+		if (cpf.isEmpty() || cpf.isBlank() || cpf == null) {
+			return false;
 		}
-		
 		return true;
 	}
 	
-	public boolean validaCPF(Cliente cliente) throws Exception {
-		String cpf = cliente.getCpf();
-
-		if (cpf.isEmpty() || cpf.isBlank()) {
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean validaEmail(Cliente cliente) throws Exception {
+	public static boolean validaEmail(Cliente cliente){
 		String email = cliente.getEmail();
 
-		if (email.isEmpty() || email.isBlank()) {
-			return true;
+		if (email.isEmpty() || email.isBlank() || email == null) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
-	public boolean validaSenha(Cliente cliente) throws Exception {
+	public static boolean validaSenha(Cliente cliente) throws RuntimeException {
 		String senha = cliente.getSenha();
 
-		if (senha.isEmpty() || senha.isBlank()) {
-			return true;
+		if (senha.isEmpty() || senha.isBlank() || senha == null) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
-	public boolean validaNome(Cliente cliente) throws Exception {
+	public static boolean validaNome(Cliente cliente) throws RuntimeException {
 		String nome = cliente.getNome();
 
-		if (nome.isEmpty() || nome.isBlank()) {
-			return true;
+		if (nome.isEmpty() || nome.isBlank() || nome == null) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 }

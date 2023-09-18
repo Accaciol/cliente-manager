@@ -33,8 +33,6 @@ public class ClienteController {
 	@Autowired
 	ClienteService clienteService;
 	
-	Validador validador;
-
 	@GetMapping
 	public ResponseEntity<List<Cliente>> getAllClients(Authentication authentication) {
 		
@@ -72,15 +70,12 @@ public class ClienteController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) throws Exception {
-		boolean clientevalido = validador.validadorCliente(cliente);
+	public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) {
+		boolean clientevalido = Validador.validadorCliente(cliente);
 		if(clientevalido) {
-			clienteService.criarCliente(cliente);
-		}
-		try {
-			return new ResponseEntity<>(cliente, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}else {
+			return new ResponseEntity<>(clienteService.criarCliente(cliente), HttpStatus.OK);
 		}
 	}
 

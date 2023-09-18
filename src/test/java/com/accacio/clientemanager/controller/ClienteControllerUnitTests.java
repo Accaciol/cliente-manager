@@ -61,8 +61,10 @@ public class ClienteControllerUnitTests {
 		
 		when(service.criarCliente(cli1)).thenReturn(cli1);
 		Cliente clienteCriado = controller.criarCliente(cli1).getBody();
+	
 		Assertions.assertNotNull(clienteCriado);
 		Assertions.assertFalse(clienteCriado.getNome().isEmpty());
+		
 		
 	}
 
